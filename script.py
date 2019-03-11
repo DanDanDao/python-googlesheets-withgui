@@ -1,70 +1,38 @@
-from __future__ import print_function
-from apiclient.discovery import build
-from httplib2 import Http
-from oauth2client import file, client, tools
 import pandas as pd
 import pygsheets
 
 
-
+#spreadsheet information
 SPREADSHEET_ID = "1mn93Hl0zT7Cb2YaPryj523IQEzelVa1HWLrR3ZxrJRU" # <Your spreadsheet ID>
 RANGE_NAME = "data" # <Your worksheet name>
 
 
 gc = pygsheets.authorize(service_file='creds.json')
+sh = gc.open_by_key(SPREADSHEET_ID)
+
+wks = sh.sheet1
+df = wks.get_as_df(has_header=True, index_colum=1, empty_value="")
+
+add = "61002"
+student_id = "s3438953"
+
+#working
+if (student_id in df.index):
+    df.loc["s343887", "port_1"] = "in dataframe"
+else:
+    df.loc["s343887", "port_1"] = "not in dataframe"
 
 
-def get_google_sheet(spreadsheet_id, range_name):
-    """ Retrieve sheet data using OAuth credentials and Google Python API. """
-    scopes = 'https://www.googleapis.com/auth/spreadsheets.readonly'
-    # Setup the Sheets API
-    store = file.Storage('credentials.json')
-    creds = store.get()
-    if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('client_secret.json', scopes)
-        creds = tools.run_flow(flow, store)
-    service = build('sheets', 'v4', http=creds.authorize(Http()))
-
-    # Call the Sheets API
-    gsheet = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
-    return gsheet
+#not working
+if (add in df.values):
+    df.loc["s343889", "port_2"] = "duplicated"
+else:
+    df.loc["s343889", "port_2"] = "available"
 
 
-def gsheet2df(gsheet):
-    """ Converts Google sheet data to a Pandas DataFrame.
-    Note: This script assumes that your data contains a header file on the first row!
-    Also note that the Google API returns 'none' from empty cells - in order for the code
-    below to work, you'll need to make sure your sheet doesn't contain empty cells,
-    or update the code to account for such instances.
-    """
-    header = gsheet.get('values', [])[0]   # Assumes first line is header!
-    values = gsheet.get('values', [])[1:]  # Everything else is data.
-    if not values:
-        print('No data found.')
-    else:
-        all_data = []
-        for col_id, col_name in enumerate(header):
-            column_data = []
-            for row in values:
-                column_data.append(row[col_id])
-            ds = pd.Series(data=column_data, name=col_name)
-            all_data.append(ds)
-        df = pd.concat(all_data, axis=1)
-        return df
+#Write to google spreadsheet
+wks.set_dataframe(df,(1,1), copy_index=True)
 
-
-gsheet = get_google_sheet(SPREADSHEET_ID, RANGE_NAME)
-df = gsheet2df(gsheet)
-df.set_index("student_no", inplace = True)
-print('Dataframe size = ', df.shape)
-print(df.head())
-print(df.loc["s343873","port_1"])
-
-df.loc["s343887","port_1"] = "test success"
-print(df.loc["s343887","port_1"])
-
-sh = gc.open('data')
-
-wks = sh[0]
-
-wks.set_dataframe(df,(0,0))
+header = wks.cell('A1')
+header.value = 'student_no'
+header.update()
