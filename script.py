@@ -3,10 +3,15 @@ from apiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 import pandas as pd
+import pygsheets
+
 
 
 SPREADSHEET_ID = "1mn93Hl0zT7Cb2YaPryj523IQEzelVa1HWLrR3ZxrJRU" # <Your spreadsheet ID>
 RANGE_NAME = "data" # <Your worksheet name>
+
+
+gc = pygsheets.authorize(service_file='creds.json')
 
 
 def get_google_sheet(spreadsheet_id, range_name):
@@ -53,14 +58,13 @@ df = gsheet2df(gsheet)
 df.set_index("student_no", inplace = True)
 print('Dataframe size = ', df.shape)
 print(df.head())
-
-
 print(df.loc["s343873","port_1"])
-#
-# df.loc["s343887","port_1"] = "test success"
-#
-# print(df.loc["s343887","port_1"])
 
-# df.to_csv('https://docs.google.com/spreadsheets/d/' +
-#                  '1mn93Hl0zT7Cb2YaPryj523IQEzelVa1HWLrR3ZxrJRU' +
-#                  '/edit#gid=614041454&format=csv')
+df.loc["s343887","port_1"] = "test success"
+print(df.loc["s343887","port_1"])
+
+sh = gc.open('data')
+
+wks = sh[0]
+
+wks.set_dataframe(df,(0,0))
