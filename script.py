@@ -50,11 +50,12 @@ def gsheet2df(gsheet):
 
 gsheet = get_google_sheet(SPREADSHEET_ID, RANGE_NAME)
 df = gsheet2df(gsheet)
+df.set_index("student_no", inplace = True)
 print('Dataframe size = ', df.shape)
 print(df.head())
 
 
-# print(df.loc["s343887","port_1"])
+print(df.loc["s343873","port_1"])
 #
 # df.loc["s343887","port_1"] = "test success"
 #
