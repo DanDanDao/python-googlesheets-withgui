@@ -1,6 +1,7 @@
 import pygsheets
 from tkintertoy import Window
 import smtplib
+import email
 
 #Connect to server
 server = smtplib.SMTP('smtp.gmail.com:587')
@@ -58,8 +59,8 @@ def addPorts(student_no, port_1, port_2):
         df.loc[student_no, "port_2"] = port_2
         gui.set('message', "Pick ports successfully")
         # Message for email
-        msg = 'Student: ' + student_no + ' picks: ' + port_1 + ' and ' + port_2
-        server.sendmail('guangdanny@gmail.com', 'guangdanny@gmail.com', 'Student: ')
+        msg = '\r\n' + 'Student: ' + student_no + ' picks: ' + port_1 + ' and ' + port_2
+        server.sendmail('guangdanny@gmail.com', 'guangdanny@gmail.com', msg)
 
 
 while True:
