@@ -58,8 +58,8 @@ def addPorts(student_no, port_1, port_2):
         df.loc[student_no, "port_2"] = port_2
         gui.set('message', "Pick ports successfully")
         # Message for email
-        msg = "Student: " + student_no + " picks: " + port_1 + " and " + port_2
-        server.sendmail('guangdanny@gmail.com', 'guangdanny@gmail.com', 'Howdy from a python function')
+        msg = 'Student: ' + student_no + ' picks: ' + port_1 + ' and ' + port_2
+        server.sendmail('guangdanny@gmail.com', 'guangdanny@gmail.com', 'Student: ')
 
 
 while True:
@@ -70,7 +70,6 @@ while True:
         else:
             gui.set('message', "Please fill every boxes")
     else:
-        server.quit()
         break
 
 
