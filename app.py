@@ -3,8 +3,6 @@ from tkintertoy import Window
 import smtplib
 import email
 
-password= 'Qn7Fxa9WRUwbz7:'
-
 #Connect to server
 server = smtplib.SMTP('smtp.outlook.com:587')
 server.starttls()
