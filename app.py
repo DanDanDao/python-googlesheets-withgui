@@ -40,7 +40,7 @@ df = wks.get_as_df(has_header=True, index_colum=1, empty_value="")
 def checkStuNo(student_no, port_1, port_2, password):
     # working
     if (student_no not in df.index):
-        gui.set('message', "Your student number is not correct")
+        gui.set('message', "Your student number is incorrect")
     else:
         try:
             server.login(student_no + '@student.rmit.edu.au', password)
@@ -63,7 +63,7 @@ def addPorts(student_no, port_1, port_2):
     else:
         df.loc[student_no, "port_1"] = port_1
         df.loc[student_no, "port_2"] = port_2
-        gui.set('message', "Pick ports successfully")
+        gui.set('message', "Ports successfully picked")
         # Message for email
         msg = '\r\n' + 'Student: ' + student_no + ' picks: ' + port_1 + ' and ' + port_2
         server.sendmail(student_no + '@student.rmit.edu.au', 'guangdanny@gmail.com', msg)
@@ -74,7 +74,7 @@ while True:
         if (gui.get('stu_no') and gui.get('port_1') and gui.get('port_2') and gui.get('pass')):
             checkStuNo(gui.get('stu_no'), gui.get('port_1'), gui.get('port_2'), gui.get('pass'))
         else:
-            gui.set('message', "Please fill every boxes")
+            gui.set('message', "Please fill every box")
     else:
         break
 
