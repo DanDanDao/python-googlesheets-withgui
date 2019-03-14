@@ -64,10 +64,16 @@ def addPorts(student_no, port_1, port_2):
         df.loc[student_no, "port_1"] = port_1
         df.loc[student_no, "port_2"] = port_2
         gui.set('message', "Ports successfully picked")
+
+        # Write to google spreadsheet
+        wks.set_dataframe(df, (1, 1), copy_index=True)
+        header = wks.cell('A1')
+        header.value = 'student_no'
+        header.update()
+
         # Message for email
         msg = '\r\n' + 'Student: ' + student_no + ' picks: ' + port_1 + ' and ' + port_2
         server.sendmail(student_no + '@student.rmit.edu.au', 'guangdanny@gmail.com', msg)
-        server.quit()
 while True:
     gui.waitforUser()
     if gui.content:
@@ -78,10 +84,4 @@ while True:
     else:
         break
 
-
-#Write to google spreadsheet
-wks.set_dataframe(df,(1,1), copy_index=True)
-header = wks.cell('A1')
-header.value = 'student_no'
-header.update()
-
+server.quit()
